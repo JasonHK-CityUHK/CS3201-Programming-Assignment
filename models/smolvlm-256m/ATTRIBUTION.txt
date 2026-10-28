@@ -1,0 +1,6 @@
+Model: HuggingFaceTB/SmolVLM-256M-Instruct
+Author: Hugging Face
+Source: https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct
+Source revision: 7e3e67edbbed1bf9888184d9df282b700a323964
+License: Apache-2.0; see LICENSE.txt and MODEL_CARD.md.
+The BF16 model weights are unmodified. The provided server loads them as FP32 for CPU inference.
