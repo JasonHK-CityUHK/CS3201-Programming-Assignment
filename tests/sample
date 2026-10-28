@@ -20,7 +20,7 @@ input "DESCRIBE" 2
 input "9999" 4
 
 input "DESCRIBE" 2
-input "0000" 4
+input "0000" 15
 
 input "LIST" 4
 
@@ -40,4 +40,4 @@ input "0000" 4
 
 input "LIST" 4
 
-input "QUIT" 4
+input "QUIT" 1
