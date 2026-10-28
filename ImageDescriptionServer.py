@@ -8,24 +8,24 @@ You do not need to read the AI code in Part 4.
 """
 import socket
 
+Address = tuple[str, int]
+
 HEADER_SIZE = 10
 MAX_MESSAGE_BYTES = 5 * 1024 * 1024
 
 
 # ===== PART 1: FIVE STUDENT SOCKET FUNCTIONS AND ONE PROVIDED HELPER =====
-# TODO: Complete create_listener.
-def create_listener(host, port):
+def create_listener(host: str, port: int) -> socket.socket:
     """Create and return an IPv4 TCP listening Socket."""
-    raise NotImplementedError("TODO: create_listener")
+    return socket.create_server((host, port))
 
 
-# TODO: Complete accept_client.
-def accept_client(listener):
+def accept_client(listener: socket.socket) -> tuple[socket.socket, Address]:
     """Accept a client connection.
 
     Returns (conn, address): conn is the connected Socket; address is (IP, port).
     """
-    raise NotImplementedError("TODO: accept_client")
+    return listener.accept()
 
 
 # OPTIONAL PROVIDED HELPER - USE IF NEEDED, DO NOT MODIFY.
@@ -33,7 +33,7 @@ def accept_client(listener):
 # Return the data when all count bytes have arrived.
 # Return None if the peer closes the connection before this call receives any bytes.
 # Raise ConnectionError if it closes after some bytes arrive, but before count bytes.
-def recv_exact(conn, count):
+def recv_exact(conn: socket.socket, count: int) -> bytes | None:
     """Read exactly count bytes, or report that the connection closed."""
     data = b""
     while len(data) < count:
@@ -47,8 +47,7 @@ def recv_exact(conn, count):
     return data
 
 
-# TODO: Complete receive_message.
-def receive_message(conn):
+def receive_message(conn: socket.socket) -> bytes | None:
     """Receive one complete message.
 
     Message format: 10 ASCII length digits (with leading zeros) + data.
@@ -57,24 +56,35 @@ def receive_message(conn):
     closes before any bytes of a new message arrive.
     Example: b"0000000005HELLO" returns b"HELLO".
     """
-    raise NotImplementedError("TODO: receive_message")
+    length_digits = recv_exact(conn, 10)
+    if length_digits is None:
+        return None
+    
+    try:
+        length = int(length_digits.decode("ascii"))
+    except:
+        conn.close()
+        return None
+    
+    return recv_exact(conn, length)
 
 
-# TODO: Complete send_message.
-def send_message(conn, payload):
+def send_message(conn: socket.socket, payload: bytes) -> None:
     """Send the supplied bytes as one complete message.
 
     Message format: 10 ASCII length digits (with leading zeros) + data.
     The length counts data bytes only (1..MAX_MESSAGE_BYTES), excluding the header.
     Returns None on successful completion.
     """
-    raise NotImplementedError("TODO: send_message")
+    length = len(payload)
+    length_digits = f"{length:010d}".encode("ascii")
+    conn.send(length_digits)
+    conn.send(payload)
 
 
-# TODO: Complete close_client.
-def close_client(conn):
+def close_client(conn: socket.socket) -> None:
     """Close the connected Socket. Returns None."""
-    raise NotImplementedError("TODO: close_client")
+    conn.close()
 
 
 # ===== PART 2: PROVIDED SOCKET FLOW - READ, DO NOT MODIFY =====

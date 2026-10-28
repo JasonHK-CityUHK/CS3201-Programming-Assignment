@@ -1,0 +1,43 @@
+#!/bin/bash
+set -euo pipefail
+
+sleep 4
+
+input "UNKNOWN" 4
+
+input "UPLOAD" 2
+input "./missing.jpg" 4
+
+input "UPLOAD" 2
+input "./invalid.jpg" 4
+
+input "UPLOAD" 2
+input "./test_images/cat.jpg" 4
+
+input "LIST" 4
+
+input "DESCRIBE" 2
+input "9999" 4
+
+input "DESCRIBE" 2
+input "0000" 4
+
+input "LIST" 4
+
+input "DOWNLOAD" 2
+input "9999" 2
+input "missing_download.jpg" 4
+
+input "DOWNLOAD" 2
+input "0000" 2
+input "cat_download.jpg" 4
+
+input "REMOVE" 2
+input "9999" 4
+
+input "REMOVE" 2
+input "0000" 4
+
+input "LIST" 4
+
+input "QUIT" 4

@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#        ___            _   
+#       / / |_ ___  ___| |_ 
+#      / /| __/ _ \/ __| __|
+#   _ / / | ||  __/\__ \ |_ 
+#  (_)_/   \__\___||___/\__| Automated E2E Testing Script
+#                          
+
+set -euo pipefail
+
+TEXT_RESET="$(tput sgr0)"
+TEXT_BOLD="$(tput bold)"
+TEXT_RED="$(tput setaf 1)"
+TEXT_BLUE="$(tput setaf 4)"
+
+input()
+{
+    local input="$1"
+    local delay="${2:-1}"
+    local char_delay="${3:-0.1}"
+    local char
+
+    while IFS= read -r -n1 char; do
+        printf '%s' "$char"
+        sleep "$char_delay"
+    done <<< "$input"
+
+    printf '\n'
+    sleep "$delay"
+}
+
+if [ "$#" -ne 1 ]; then
+    >&2 echo "Usage: $(basename $0) TEST_CASE"
+    exit 1
+fi
+
+TEST_CASE="$(realpath -m $1)"
+
+if [ ! -f "$TEST_CASE" ]; then
+    >&2 echo "${TEXT_RED}Error: \"$TEST_CASE\" is missing or not a file${TEXT_RESET}"
+    exit 2
+fi
+
+echo -e "${TEXT_BOLD}${TEXT_BLUE}Testing with test case \"$(basename $TEST_CASE)\"...${TEXT_RESET}\n\n"
+source "$TEST_CASE" | tee >(.venv/bin/python ImageDescriptionClient.py 127.0.0.1 18333)
+# source "$TEST_CASE" | tee >(./ubuntu-22.04-x64/ImageDescriptionClientDemo 127.0.0.1 18333)
